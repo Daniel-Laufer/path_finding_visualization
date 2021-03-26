@@ -1,6 +1,8 @@
 # Pathfinding Algorithms Visualizer
 A visualization of various path finding algorithms, made using Python and its Pygame library. 
 
+See this project in action on my website! https://daniel-laufer.github.io/Projects
+
 ## Running the Visualizer (NOTE: STILL IN DEVELOPMENT)
 After downloading the project, run the following commands in your terminal (inside the directory where the project was downloaded to): 
 
