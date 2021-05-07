@@ -1,3 +1,6 @@
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+
 import pygame
 from typing import *
 import math
@@ -56,14 +59,14 @@ class PygameWindow():
     last_dragged_box: Optional[Box]
     
 
-    def __init__(self, algorithm: str = "a_star"):
+    def __init__(self, num_boxes_horizontally: int, num_boxes_vertically: int,  algorithm:str):
         pygame.init()
         self.COLORS = {'black': (0, 0, 0), 'white': (255, 255, 255), 'green': (0, 255, )}
         self.button_row_height = 50
         self.screen_width = 500
         self.screen_height = 500
-        self.num_boxes_horizontally = 3
-        self.num_boxes_vertically = 3
+        self.num_boxes_horizontally = num_boxes_horizontally
+        self.num_boxes_vertically = num_boxes_vertically
         self.box_width = math.floor(self.screen_width / self.num_boxes_horizontally)
         self.box_height = math.floor(self.screen_height / self.num_boxes_vertically)
         self.starting_point_coords = None

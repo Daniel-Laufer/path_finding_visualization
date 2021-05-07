@@ -1,3 +1,6 @@
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+
 import pygame
 import math
 from typing import *
@@ -9,10 +12,19 @@ from pygame_window import PygameWindow
 from eventHandlers import EventHanlder
 
 
+def get_commandline_args():
+    if len(sys.argv) != 3  or not sys.argv[1].isdigit() or sys.argv[2] not in ['a_star', 'dij']:
+        print("\nUsage: <number of columns> <algorithm name>\n\tWhere number of columns is a positive integer, and the algorithm name is either \"a_star\" or \"dij\"\n")
+        exit(1)
+    
+    return int(sys.argv[1]), sys.argv[2]
+    
+
 
 
 if __name__ == "__main__":
-    window = PygameWindow()
+    requested_num_cols, requested_alg = get_commandline_args()
+    window = PygameWindow(requested_num_cols, requested_num_cols, requested_alg)
     window.setup_grid()
     window.initialize_screen()
     window.generate_random_walls()
