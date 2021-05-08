@@ -3,21 +3,18 @@ from datetime import datetime
 STATUS_COLORS = {
     "EMPTY": (255, 255, 255),
     "WALL": (0, 0, 0),
-    "START": (0, 252, 59),
+    "START": (0, 255, 0),
     "END": (255, 0, 0),
     'VISITED': (255, 0, 255),
     'TO_VISIT': (128, 0, 255),
-    'ENCOUNTERED': (57, 148, 204),
+    'ENCOUNTERED': (255, 251, 0),
     'EXPLORED': (43, 79, 207),
-    'PATH': (0, 252, 59)
+    'PATH': (225, 0, 255)
 }
 
 class Box:
     """
     An individual box on the screen.
-
-
-
     """
     def __init__(self, x: int, y: int, width: int, height: int, row: int, col: int) -> None:
         self.color = (255, 255, 255)
