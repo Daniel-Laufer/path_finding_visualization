@@ -147,7 +147,7 @@ class EventHanlder():
 
     def handleMouseMotion(self, window: PygameWindow, event: pygame.event):
         """
-        Allows for users to drag and draw/remove walls on the screen. 
+        Allows for users to drag and draw/remove walls on the screen.
         """
         if pygame.mouse.get_pressed()[0]:
             pos = pygame.mouse.get_pos()
@@ -169,7 +169,7 @@ class EventHanlder():
                             window.end_point_coords = None
                         window.last_dragged_box = window.boxes[row_clicked][boxes_i]
                         window.boxes[row_clicked][boxes_i].toggle_wall_status()
-                        
+
                     # stop the while loop
                     boxes_i = len(window.boxes[row_clicked])
 

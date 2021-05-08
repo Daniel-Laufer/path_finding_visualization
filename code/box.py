@@ -1,12 +1,15 @@
 from datetime import datetime
 
 STATUS_COLORS = {
-    "EMPTY": (255, 255, 255), 
-    "WALL": (0, 0, 0), 
-    "START": (50, 205, 50), 
-    "END": (255, 0, 0), 
-    'VISITED': (255, 0, 255), 
-    'TO_VISIT': (128, 0, 255)
+    "EMPTY": (255, 255, 255),
+    "WALL": (0, 0, 0),
+    "START": (0, 252, 59),
+    "END": (255, 0, 0),
+    'VISITED': (255, 0, 255),
+    'TO_VISIT': (128, 0, 255),
+    'ENCOUNTERED': (57, 148, 204),
+    'EXPLORED': (43, 79, 207),
+    'PATH': (0, 252, 59)
 }
 
 class Box:
@@ -32,6 +35,10 @@ class Box:
         self.f_cost = 0
         self.g_cost = 0
         self.h_cost = 0
+
+        #attributes used for BFS
+        self.unvisited = True
+
 
 
     def toggle_wall_status(self) -> None:

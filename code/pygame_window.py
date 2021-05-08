@@ -6,7 +6,7 @@ from typing import *
 import math
 import random
 
-from box import Box
+from box import Box, STATUS_COLORS
 
 
 class PygameWindow():
@@ -19,7 +19,7 @@ class PygameWindow():
     colors: a dictionary that maps color names to their rgb values
     button_row_height: the height of the frame that hold the button
     screen_width: the width of the pygame window
-    screen_height: the height of the pygame window 
+    screen_height: the height of the pygame window
     num_boxes_horizontally: number of boxes in each row
     num_boxes_vertically: number of boxes in each column
     box_width: the width of each box
@@ -57,11 +57,11 @@ class PygameWindow():
     boxes: List[List[Box]]  # should be List[List[Box,...],...] but typing module throws error when I do it that way
     row_coords: List[int] # should be List[int,...] but typing module throws error when I do it that way
     last_dragged_box: Optional[Box]
-    
+
 
     def __init__(self, num_boxes_horizontally: int, num_boxes_vertically: int,  algorithm:str):
         pygame.init()
-        self.COLORS = {'black': (0, 0, 0), 'white': (255, 255, 255), 'green': (0, 255, )}
+        self.COLORS = {'black': (0, 0, 0), 'white': (255, 255, 255), 'green': (0, 255, 0)}
         self.button_row_height = 50
         self.screen_width = 500
         self.screen_height = 500
@@ -71,17 +71,18 @@ class PygameWindow():
         self.box_height = math.floor(self.screen_height / self.num_boxes_vertically)
         self.starting_point_coords = None
         self.end_point_coords = None
-        self.button_coords = {'start': (-1, -1), 'pause': (-1, -1), 'reset': (-1, -1)} 
+        self.button_coords = {'start': (-1, -1), 'pause': (-1, -1), 'reset': (-1, -1)}
         self.button_colors = {'start': (0, 255, 0), 'pause': (255, 165, 0), 'reset': (255, 0, 0)}
         self.button_width = 100
         self.button_height = 45
-        self.game_status = "" 
+        self.game_status = ""
         self.running = True
         self.font = pygame.font.SysFont("arialroundedboldttf", 12)
         self.boxes = []
         self.row_coords = []
         self.algorithm = algorithm
         self.last_dragged_box = None
+        self.frame_count = 0
 
 
     def initialize_screen(self) -> None:
@@ -152,7 +153,7 @@ class PygameWindow():
             for box in row:
                 if random.random() > 0.5:
                     box.toggle_wall_status()
-    
+
 
     def draw_grid(self) -> None:
         """
@@ -160,7 +161,7 @@ class PygameWindow():
         """
         for row in self.boxes:
             for box in row:
-                if box.status == 'EMPTY':
+                if box.color == STATUS_COLORS['EMPTY']:
                     pygame.draw.rect(self.screen, self.COLORS['black'],(box.x, box.y, box.width, box.height), 1)
                 else:
                     pygame.draw.rect(self.screen, box.color ,(box.x, box.y, box.width, box.height), 0)
@@ -191,3 +192,5 @@ class PygameWindow():
             vert_button_padding = (self.button_height - text.get_height()) // 2
             pygame.draw.rect(self.screen, self.button_colors[button],(self.button_coords[button][0], self.button_coords[button][1], self.button_width, self.button_height))
             self.screen.blit(text, (self.button_coords[button][0] + horiz_button_padding , self.button_coords[button][1] + vert_button_padding))
+
+
