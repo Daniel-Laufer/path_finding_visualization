@@ -1,4 +1,6 @@
+from __future__ import annotations
 from datetime import datetime
+
 
 STATUS_COLORS = {
     "EMPTY": (255, 255, 255),
@@ -34,7 +36,7 @@ class Box:
         self.h_cost = 0
 
         #attributes used for BFS
-        self.unvisited = True
+        self.cost = None
 
 
 
@@ -92,6 +94,12 @@ class Box:
     def __eq__(self, other):
         return self.row == other.row and self.col == other.col
 
+    def __lt__(self, other: Box):
+        return True
+
+
 
     def __repr__(self) -> str:
         return '({}, {})'.format(self.row, self.col)
+
+
