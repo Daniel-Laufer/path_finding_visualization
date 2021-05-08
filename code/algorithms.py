@@ -1,91 +1,99 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 from pygame_window import PygameWindow
-from box import Box
+from box import Box, STATUS_COLORS
+import time
+from ADTs import Queue
 
-class A_Star_algorithm():
-    def __init__(self) -> None:
-        self.closed_set = []
-        self.starting_node = None
-        self.open_set = []
-        self.current_node = None
+
+class Algorithm():
+    """
+    An abstract parent class for various algorithms.
+    """
+    def __init__(self):
         self.started = False
 
-    def run(self, window: PygameWindow):
+    def run(self, window:PygameWindow):
+        raise NotImplementedError
 
+    def reset_algorithm(self, window: PygameWindow):
+        self.__init__()
+        window.frame_count = 0
+        window.boxes, window.row_coords = [], []
+        window.setup_grid()
+        window.last_dragged_box, window.game_status, window.starting_point_coords, window.end_point_coords = None, None, None, None
+
+
+class A_Star_algorithm(Algorithm):
+    def __init__(self) -> None:
+        self.closed_set = []
+        self.open_set = []
+
+    def run(self, window: PygameWindow):
+        pass
+
+
+class BFS(Algorithm):
+
+    def __init__(self):
+        super().__init__()
+        self.q = Queue()
+        self.starting_box = None
+        self.end_box = None
+
+    def run(self, window: PygameWindow):
         if not window.game_status:
             return
         elif window.game_status == 'start':
             # check if start and end points exist
             if not all([window.starting_point_coords, window.end_point_coords]):
                 return
-            elif not self.started:
-                self.starting_node = window.boxes[window.starting_point_coords[0]][window.starting_point_coords[1]]
-                self.open_set.append(self.starting_node)
+            if not self.started:
+                self.starting_box = window.boxes[window.starting_point_coords[0]][window.starting_point_coords[1]]
+                self.end_box = window.boxes[window.end_point_coords[0]][window.end_point_coords[1]]
+                self.q.enqueue(self.starting_box)
                 self.started = True
 
-            if len(self.open_set) == 0:
+            if self.q.is_empty():
+                self.highlight_path(self.end_box)
                 return
 
+            u = self.q.dequeue()
+            for neighbor in u.neighbors:
+                if neighbor.color in [STATUS_COLORS["EMPTY"], STATUS_COLORS["END"]]:
+                    if neighbor.color ==  STATUS_COLORS["END"]:
+                        neighbor.parent = u
+                        self.highlight_path(neighbor)
+                        self.q.empty_queue()
+                        return
 
-            for node in self.closed_set:
-                if (node.row, node.col) != window.starting_point_coords and (node.row, node.col) != window.end_point_coords:
-                    node.toggle_visisted()
+                    neighbor.color = STATUS_COLORS["ENCOUNTERED"]
+                    neighbor.parent = u
+                    self.q.enqueue(neighbor)
 
-            for node in self.open_set:
-                if (node.row, node.col) != window.starting_point_coords and (node.row, node.col) != window.end_point_coords:
-                    node.toggle_to_visit()
+            if u.color != STATUS_COLORS["START"]:
+                u.color = STATUS_COLORS["EXPLORED"]
+        elif window.game_status == "reset":
+            self.reset_algorithm(window)
 
-            lowest_f_cost_index = 0
-            for i, node in enumerate(self.open_set):
-                if node.f_cost < self.open_set[lowest_f_cost_index].f_cost:
-                    lowest_f_cost_index = i
-
-            current = self.open_set[lowest_f_cost_index]
-            if (current.row, current.col) == window.end_point_coords:
-                self.highlight_path(window, current)
-                window.game_status = "pause"
-                return
-
-            # add to closed set
-            node_to_add_to_closed = self.open_set.pop(lowest_f_cost_index)
-            # node_to_add_to_closed.toggle_processed()
-            self.closed_set.append(node_to_add_to_closed)
-
-            for i, neighbor in enumerate(current.neighbors):
-                if neighbor not in self.closed_set and neighbor.status != 'WALL':
-                    temp_g_cost = current.g_cost + 1 # neighbor is one away from the current node!
-                    if neighbor in self.open_set:
-                        # if the neighbor's g cost was already evaluated previously, check to see if
-                        # its g_cost in this path is lower, if it is, then update the g_cost
-                        # tldr we found a better path to this neighbor than in a previous attempt
-                        if temp_g_cost < neighbor.g_cost:
-                            neighbor.g_cost = temp_g_cost
-                    else:
-                        neighbor.g_cost = temp_g_cost
-                        # neighbor.toggle_to_process()
-                        self.open_set.append(neighbor)
-
-                    neighbor.h_cost = self.calc_heuristic(neighbor, window.boxes[window.end_point_coords[0]][window.end_point_coords[1]])
-                    neighbor.f_cost = neighbor.g_cost + neighbor.h_cost
-                    neighbor.parent = current
-
-        elif window.game_status == 'pause':
-            # do nothing
+    def highlight_path(self, box: Box) -> None:
+        if box.parent is None:
             return
-        elif window.game_status == 'reset':
-            self.__init__()
-            window.boxes = []
-            window.row_coords = []
-            window.setup_grid()
-            window.last_dragged_box, window.game_status, window.starting_point_coords, window.end_point_coords = None, None, None, None
+        if box != self.starting_box and box != self.end_box:
+            box.color = STATUS_COLORS["PATH"]
+        self.highlight_path(box.parent)
 
-    def calc_heuristic(self, neighbor: Box, end_node: Box):
-        return (neighbor.row - end_node.row) ** 2 + (neighbor.col - end_node.col) ** 2
 
-    def highlight_path(self, window: PygameWindow, box: Box) -> None:
-        if not box or not box.parent:
-            return
-        if (box.row, box.col) != window.starting_point_coords and (box.row, box.col) != window.end_point_coords:
-            box.color = (0, 0, 255)
-        self.highlight_path(window, box.parent)
+
+
+
+
+
+
+
+
+
+
+
+
+
