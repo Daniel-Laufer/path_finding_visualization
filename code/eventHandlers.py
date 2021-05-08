@@ -138,6 +138,7 @@ class EventHanlder():
 
                     # make that box a wall
                     window.boxes[row_clicked][boxes_i].toggle_wall_status()
+                    window.last_dragged_box = window.boxes[row_clicked][boxes_i]
 
                     # stop the while loop
                     boxes_i = len(window.boxes[row_clicked])

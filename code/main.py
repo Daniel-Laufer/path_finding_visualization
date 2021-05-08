@@ -12,8 +12,8 @@ from algorithms import *
 
 
 def get_commandline_args():
-    if len(sys.argv) != 3  or not sys.argv[1].isdigit() or sys.argv[2] not in ['a_star', 'dij', 'bfs']:
-        print("\nUsage: <number of columns> <algorithm name>\n\tWhere algorithm name can be any of the following:\n\t\t\"a_star\"\n\t\t\"dij\"\n\t\t\"bfs (note that for simplicity, we are assuming that diagonal distances are equivalent to adjacent distances between squares in the grid) \"")
+    if len(sys.argv) != 3  or not sys.argv[1].isdigit() or sys.argv[2] not in ['a_star', 'dij', 'bfs', 'bfs_weighted']:
+        print("\nUsage: <number of columns> <algorithm name>\n\tWhere algorithm name can be any of the following:\n\t\t\"a_star\"\n\t\t\"dij\"\n\t\t\"bfs\n\t\t\"bfs_weighted\"\"")
         exit(1)
 
     return int(sys.argv[1]), sys.argv[2]
@@ -32,11 +32,14 @@ if __name__ == "__main__":
     eventHandler = EventHanlder()
     alg = None
     if window.algorithm == "a_star":
-        alg = A_Star_algorithm()
+        alg = A_Star_algorithm(window)
     elif window.algorithm == "dij":
-        alg = A_Star_algorithm()
+        alg = A_Star_algorithm(window)
     elif window.algorithm == "bfs":
-        alg = BFS()
+        alg = BFS(window)
+    elif window.algorithm == "bfs_weighted":
+        alg = BFS_weighted(window)
+
 
     while window.running:
         window.screen.fill((255, 255, 255))
