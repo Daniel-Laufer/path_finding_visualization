@@ -1,15 +1,14 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-
 import pygame
 import math
 from typing import *
 import random
 import sys
-
 from box import Box
 from pygame_window import PygameWindow
 from eventHandlers import EventHanlder
+from algorithms import A_Star_algorithm
 
 
 def get_commandline_args():
@@ -28,22 +27,28 @@ if __name__ == "__main__":
     window.setup_grid()
     window.initialize_screen()
     window.generate_random_walls()
-    eventHandler = EventHanlder(window)
+    eventHandler = EventHanlder()
+    alg = None
+    if window.algorithm == "a_star":
+        alg = A_Star_algorithm()
+    elif window.algorithm == "dij":
+        alg = A_Star_algorithm()
 
     while window.running:
         window.screen.fill((255, 255, 255))
         window.draw_grid()
         window.draw_buttons()
         pygame.display.flip()
-
+        alg.run(window)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 window.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                eventHandler.handleMouseButtonDown(event)
+                eventHandler.handleMouseButtonDown(window, event)
             elif event.type == pygame.MOUSEMOTION:
                 if pygame.mouse.get_pressed()[0]:
-                    eventHandler.handleMouseMotion(event)
+                    eventHandler.handleMouseMotion(window, event)
+        
 
 
 
