@@ -63,22 +63,4 @@ class MoreHeapQ:
         raise KeyError('pop from an empty priority queue')
 
 
-if __name__ == "__main__":
-    heap = More_HeapQ()
-    heap.add_task((1,1), 2)
-    heap.add_task((2,2), 5)
-    heap.add_task((3,3), 4)
-    heap.add_task((4,4), 15)
-    heap.add_task((5,5), 7)
-    heap.add_task((2,2), 7)
-
-    print(heap.pq)
-    heap.remove_task((4,4))
-    print(heap.pq)
-    heap.pop_task()
-    print(heap.pq)
-    heap.remove_task((3,3))
-    print(heap.pq)
-    x = heap.pop_task()
-    print("popped of", x)
 
