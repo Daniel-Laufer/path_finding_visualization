@@ -57,7 +57,7 @@ class Algorithm():
 
 class AStarAlgorithm(Algorithm):
     """
-    An implementation of Dijkstra's algorithm.
+    An implementation of the A* search algorithm
     ===========
     q: a list which will act as a min-heap which stores boxes the algorithm still needs to explore
     """
@@ -65,11 +65,53 @@ class AStarAlgorithm(Algorithm):
 
     def __init__(self, window: PygameWindow):
         super().__init__(window)
-        self.closed_set = []
-        self.open_set = []
+        self.q = []
 
     def run(self, window: PygameWindow):
-        pass
+        if not self.window.game_status:
+            return
+        elif self.window.game_status == 'start':
+            # check if start and end points exist
+            if not all([window.starting_point_coords, window.end_point_coords]):
+                return
+
+            if not self.started:
+                self.starting_box = window.boxes[window.starting_point_coords[0]][window.starting_point_coords[1]]
+                self.end_box = window.boxes[window.end_point_coords[0]][window.end_point_coords[1]]
+                self.started = True
+                self.starting_box.cost = 0
+                heappush(self.q, (0, self.starting_box))
+
+            if not self.q:
+                return
+
+            u = heappop(self.q)[1]
+
+            if u == self.end_box:
+                while self.q:
+                    heappop(self.q)
+                super().highlight_path(self.end_box)
+                return
+
+            for neighbor in u.neighbors:
+                alt_cost = u.cost + Algorithm.compute_distance(u, neighbor)
+                if (neighbor.cost is None or alt_cost < neighbor.cost) and neighbor.color not in [STATUS_COLORS["START"], STATUS_COLORS["WALL"]]:
+                    if neighbor.color == STATUS_COLORS["EMPTY"]:
+                        neighbor.color = STATUS_COLORS["ENCOUNTERED"]
+
+                    neighbor.cost = alt_cost
+                    priority = alt_cost + self.calc_heuristic(self.end_box, neighbor)
+                    neighbor.parent = u
+                    heappush(self.q, (priority, neighbor))
+
+                if u.color not in [STATUS_COLORS["START"], STATUS_COLORS["WALL"]]:
+                    u.color = STATUS_COLORS["EXPLORED"]
+        elif window.game_status == "reset":
+            self.reset_algorithm(window)
+
+    @staticmethod
+    def calc_heuristic(box: Box, other: Box):
+        return abs(box.x - other.x) + abs(box.y - other.y)
 
 
 class DijkstrasAlgorithm(Algorithm):

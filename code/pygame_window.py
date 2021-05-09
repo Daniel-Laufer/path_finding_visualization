@@ -36,6 +36,7 @@ class PygameWindow():
     boxes: A list storing all the Box objects in this window.
     row_coords: list to store y positions of the top left corner of the 0th box in each row of grid
     last_dragged_box: the last box to be wall-toggled by mouse-dragging
+    slowness: a positive integer that dictates how slow the chosen algorithm will run in this window.
     """
     colors: Dict[str, Tuple[int, int]]
     button_row_height: int
@@ -57,9 +58,9 @@ class PygameWindow():
     boxes: List[List[Box]]  # should be List[List[Box,...],...] but typing module throws error when I do it that way
     row_coords: List[int] # should be List[int,...] but typing module throws error when I do it that way
     last_dragged_box: Optional[Box]
+    slowness: int
 
-
-    def __init__(self, num_boxes_horizontally: int, num_boxes_vertically: int,  algorithm:str):
+    def __init__(self, num_boxes_horizontally: int, num_boxes_vertically: int,  algorithm:str, slowness: int):
         pygame.init()
         self.COLORS = {'black': (0, 0, 0), 'white': (255, 255, 255), 'green': (0, 255, 0)}
         self.button_row_height = 50
@@ -83,14 +84,13 @@ class PygameWindow():
         self.algorithm = algorithm
         self.last_dragged_box = None
         self.frame_count = 0
-
+        self.slowness = slowness
 
     def initialize_screen(self) -> None:
         """"
         Initialize the pygame window to width <self.screen_width> and height <self.screen_height> + <self.button_row_heightt>.
         """
         self.screen = pygame.display.set_mode([self.screen_width, self.screen_height + self.button_row_height])
-
 
     def setup_grid(self) -> None:
         """
@@ -119,7 +119,6 @@ class PygameWindow():
         # build up the adjacency list
         self.set_neighbors_of_each_box()
 
-
     def set_neighbors_of_each_box(self):
         """
         Fill each boxes "neighbors" list attribute with references to all of its neighbors' corresponding box objects.
@@ -144,7 +143,6 @@ class PygameWindow():
                 if j < len(row) - 1:
                     box.neighbors.append(self.boxes[i][j + 1]) # right
 
-
     def generate_random_walls(self) -> None:
         """
         Populates the grid with walls in random locations.
@@ -153,7 +151,6 @@ class PygameWindow():
             for box in row:
                 if random.random() > 0.5:
                     box.toggle_wall_status()
-
 
     def draw_grid(self) -> None:
         """
@@ -165,7 +162,6 @@ class PygameWindow():
                     pygame.draw.rect(self.screen, self.COLORS['black'],(box.x, box.y, box.width, box.height), 1)
                 else:
                     pygame.draw.rect(self.screen, box.color ,(box.x, box.y, box.width, box.height), 0)
-
 
     def get_which_row_clicked(self, pos: Tuple[int, int]):
         """

@@ -1,30 +1,54 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
-import math
-from typing import *
-import random
 import sys
-from box import Box
-from pygame_window import PygameWindow
 from eventHandlers import EventHanlder
 from algorithms import *
 
 
 def get_commandline_args():
-    if len(sys.argv) != 3  or not sys.argv[1].isdigit() or sys.argv[2] not in ['a_star', 'dij', 'bfs', 'bfs_weighted']:
-        print("\nUsage: <number of columns> <algorithm name>\n\tWhere algorithm name can be any of the following:\n\t\t\"a_star\"\n\t\t\"dij\"\n\t\t\"bfs\n\t\t\"bfs_weighted\"\"")
+    out = """ Usage: python3 main.py <number of columns> <algorithm name> <slowness>
+        Explanations: 
+            number of columns: 
+                say n=number of columns, then a n x n grid will be drawn on the screen.
+            algorithm name: 
+                the name of the pathfinding algorithm you'd like to run
+            slowness:
+                a positive integer that dictates how slow your chosen algorithm will run. 
+                Say slowness = n,  then your algorithm will run every n frame(s) of the overall framerate of 
+                the visualization.
+                So the higher the input is, the slower then algorithm will run.
+               
+        Restrictions:
+            number of columns >= 2
+            algorithm name can be any of the following strings:
+                \"a_star\" (the A* search algorithm)
+                \"dij\" (Dijkstra's algorithm)
+                \"bfs\" (Breadth-first search)
+                \"bfs_weighted\" (Breadth-first search for weighted graphs)
+            slowness > 0
+          """
+
+    all_good = False
+    if len(sys.argv) == 4:
+        num_cols_check = sys.argv[1].isdigit() and int(sys.argv[1]) >= 2
+        name_check = sys.argv[2] in ['a_star', 'dij', 'bfs', 'bfs_weighted']
+        slowness_check = sys.argv[3].isdigit() and int(sys.argv[3]) > 0
+        all_good = all([num_cols_check, name_check, slowness_check])
+
+    if len(sys.argv) != 4 or not all_good:
+        print(out)
         exit(1)
 
-    return int(sys.argv[1]), sys.argv[2]
+    return int(sys.argv[1]), sys.argv[2], int(sys.argv[3])
 
 
 
 
 if __name__ == "__main__":
 
-    requested_num_cols, requested_alg = get_commandline_args()
-    window = PygameWindow(requested_num_cols, requested_num_cols, requested_alg)
+    requested_num_cols, requested_alg, requested_slowness = get_commandline_args()
+    window = PygameWindow(requested_num_cols, requested_num_cols, requested_alg, requested_slowness)
     window.setup_grid()
 
     window.initialize_screen()
@@ -46,7 +70,7 @@ if __name__ == "__main__":
         window.draw_grid()
         window.draw_buttons()
         pygame.display.flip()
-        if window.frame_count % 1 == 0:
+        if window.frame_count % window.slowness == 0:
             alg.run(window)
         window.frame_count += 1
         for event in pygame.event.get():

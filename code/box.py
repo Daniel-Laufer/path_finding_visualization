@@ -29,16 +29,7 @@ class Box:
         self.col = col
         self.neighbors = []
         self.parent = None
-
-        # attributes used in A* search algorithm
-        self.f_cost = 0
-        self.g_cost = 0
-        self.h_cost = 0
-
-        #attributes used for BFS
         self.cost = None
-
-
 
     def toggle_wall_status(self) -> None:
         """
@@ -75,20 +66,6 @@ class Box:
             return
         self.status = "EMPTY"
         self.color = STATUS_COLORS['EMPTY']
-
-    def toggle_visisted(self) -> None:
-        """
-        Mark this box as 'visited' meaning our algorithm has dealt with this.
-        """
-        self.status = ''
-        self.color = STATUS_COLORS['VISITED']
-
-    def toggle_to_visit(self) -> None:
-        """
-        Mark this box as 'to_visit' meaning our algorithm is going to visit this box.
-        """
-        self.status == 'TO_VISIT'
-        self.color = STATUS_COLORS['TO_VISIT']
 
 
     def __eq__(self, other):

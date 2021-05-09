@@ -92,7 +92,7 @@ class EventHanlder():
                 boxes_i += 1
 
         # one of the buttons was pressed
-        elif event.button == 1 and pygame.mouse.get_pos()[1] >= window.screen_height:
+        elif event.button == 1 and pygame.mouse.get_pos()[1] >= window.screen_height - window.button_height:
             # position of the mouse
             pos = pygame.mouse.get_pos()
 
@@ -121,7 +121,6 @@ class EventHanlder():
             # determine which row was clicked to prevent checking boxes
             # in other rows
             row_clicked = window.get_which_row_clicked(pos)
-
 
             # current index of the box examined in row row_clicked
             boxes_i = 0
