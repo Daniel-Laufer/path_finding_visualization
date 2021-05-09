@@ -1,5 +1,5 @@
 # Pathfinding Algorithm Visualizer
-A visualization of various path finding algorithms including A*, Breadth-first-search, and Dijkstra's Algorithm.
+A visualization of various pathfinding algorithms including A*, Breadth-first-search, and Dijkstra's Algorithm.
 
 
 ## Running the program.
