@@ -32,13 +32,13 @@ if __name__ == "__main__":
     eventHandler = EventHanlder()
     alg = None
     if window.algorithm == "a_star":
-        alg = A_Star_algorithm(window)
+        alg = AStarAlgorithm(window)
     elif window.algorithm == "dij":
-        alg = A_Star_algorithm(window)
+        alg = DijkstrasAlgorithm(window)
     elif window.algorithm == "bfs":
         alg = BFS(window)
     elif window.algorithm == "bfs_weighted":
-        alg = BFS_weighted(window)
+        alg = BFSWeighted(window)
 
 
     while window.running:
