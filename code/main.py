@@ -1,9 +1,12 @@
 from os import environ
-environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 import sys
 from eventHandlers import EventHanlder
-from algorithms import *
+from a_star import AStarAlgorithm
+from bfs import BFS
+from dijkstra import DijkstrasAlgorithm
+from pygame_window import PygameWindow
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 
 
 def get_commandline_args():
@@ -15,7 +18,7 @@ def get_commandline_args():
                 the name of the pathfinding algorithm you'd like to run
             slowness:
                 a positive integer that dictates how slow your chosen algorithm will run. 
-                Say slowness = n,  then your algorithm will run every n frame(s) of the overall framerate of 
+                Say slowness = n,  then your algorithm will run every n frame(s) of the overall frame rate of 
                 the visualization.
                 So the higher the input is, the slower then algorithm will run.
                
@@ -24,15 +27,14 @@ def get_commandline_args():
             algorithm name can be any of the following strings:
                 \"a_star\" (the A* search algorithm)
                 \"dij\" (Dijkstra's algorithm)
-                \"bfs\" (Breadth-first search)
-                \"bfs_weighted\" (Breadth-first search for weighted graphs)
+                \"bfs\" (Breadth-first search (weighted variant))
             slowness > 0
           """
 
     all_good = False
     if len(sys.argv) == 4:
         num_cols_check = sys.argv[1].isdigit() and int(sys.argv[1]) >= 2
-        name_check = sys.argv[2] in ['a_star', 'dij', 'bfs', 'bfs_weighted']
+        name_check = sys.argv[2] in ['a_star', 'dij', 'bfs']
         slowness_check = sys.argv[3].isdigit() and int(sys.argv[3]) > 0
         all_good = all([num_cols_check, name_check, slowness_check])
 
@@ -41,8 +43,6 @@ def get_commandline_args():
         exit(1)
 
     return int(sys.argv[1]), sys.argv[2], int(sys.argv[3])
-
-
 
 
 if __name__ == "__main__":
@@ -61,10 +61,8 @@ if __name__ == "__main__":
         alg = DijkstrasAlgorithm(window)
     elif window.algorithm == "bfs":
         alg = BFS(window)
-    elif window.algorithm == "bfs_weighted":
-        alg = BFSWeighted(window)
 
-
+    # main "game" loop
     while window.running:
         window.screen.fill((255, 255, 255))
         window.draw_grid()
