@@ -20,14 +20,14 @@ def get_commandline_args():
                 a positive integer that dictates how slow your chosen algorithm will run. 
                 Say slowness = n,  then your algorithm will run every n frame(s) of the overall frame rate of 
                 the visualization.
-                So the higher the input is, the slower then algorithm will run.
+                So the higher the input is, the slower the algorithm will run.
                
         Restrictions:
             number of columns >= 2
             algorithm name can be any of the following strings:
                 \"a_star\" (the A* search algorithm)
                 \"dij\" (Dijkstra's algorithm)
-                \"bfs\" (Breadth-first search (weighted variant))
+                \"bfs\" (Breadth-first search (note that this algorithm will treat the grid as an unweighted graph, meaning that all directions will have the same cost))
             slowness > 0
           """
 
