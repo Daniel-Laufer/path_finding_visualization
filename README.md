@@ -40,7 +40,7 @@ python3 main.py 70 a_star 1
 ```bash
 python3.8 main.py 50 dij 1
 ```
-![](gifs/a_star.gif)
+![](gifs/dij.gif)
 
 
 
